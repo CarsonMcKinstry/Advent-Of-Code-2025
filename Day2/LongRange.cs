@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2025.Day2;
 
@@ -12,6 +13,28 @@ public class LongRange(long start, long end) : IEnumerable<long>
     public static LongRange From(long start, long end)
     {
         return new LongRange(start, end);
+    }
+
+    public static LongRange From(string range)
+    {
+        var split = range.Split('-').Select(long.Parse).ToArray();
+        return new LongRange(split[0], split[1]);
+    }
+    
+    public static LongRange FromInclusive(string range)
+    {
+        var split = range.Split('-').Select(long.Parse).ToArray();
+        return new LongRange(split[0], split[1] + 1);
+    }
+
+    public bool ContainsInclusive (long value)
+    {
+        return value >= _start && value <= _end;
+    }
+
+    public long Length()
+    {
+        return _end - _start;
     }
     
     public IEnumerator<long> GetEnumerator()
