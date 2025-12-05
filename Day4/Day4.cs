@@ -49,12 +49,48 @@ public partial class Day4 : Node
 
     private void PuzzleTwo()
     {
-    }
+        var rawGrid = Content.Split('\n').Where(n => n.Length > 0)
+            .ToArray();
+        var grid = new HashSet<Vector2I>();
+        var height = rawGrid.Length;
+        var width = rawGrid[0].Length;
+        for (var i = 0; i < height * width; i++)
+        {
+            var x = i % width;
+            var y = i / width;
+            var value = rawGrid[y][x];
+            if (value == '@')
+            {
+                grid.Add(new Vector2I(x, y));
+            }
+        }
 
-    private static int CantorId(int x, int y)
-    {
-        var a = x >= 0 ? 2 * x : x * -2 - 1;
-        var b = y >= 0 ? 2 * y : y * -2 - 1;
-        return a >= b ? a * a + a + b : b * b + a;
+        var removable = grid
+            .Where(point =>
+                _neighborsToCheck.Select(item => item + point).Count(grid.Contains) < 4).ToArray();
+        var removed = 0;
+        
+        while (removable.Any())
+        {
+            foreach (var point in removable)
+            {
+                grid.Remove(point);
+            }
+
+            removed += removable.Count();
+            
+            removable = grid
+                .Where(point =>
+                    _neighborsToCheck.Select(item => item + point).Count(grid.Contains) < 4).ToArray();
+        }
+        
+        foreach (var point in removable)
+        {
+            grid.Remove(point);
+        }
+
+        removed += removable.Count();
+
+        GD.Print(removed);
     }
 }
