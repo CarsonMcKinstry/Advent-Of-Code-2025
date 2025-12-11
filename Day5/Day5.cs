@@ -47,47 +47,42 @@ public partial class Day5 : Node
         var split = Content.Split("\n\n").ToArray();
         var range = split[0];
 
-        var numFresh = range.Split('\n')
+        var ranges = range.Split("\n")
             .Select<string, (long start, long end)>(r =>
             {
                 var s = r.Split('-');
-                var start = long.Parse(s.First());
-                var end = long.Parse(s.Last());
-
+                var start = long.Parse(s[0]);
+                var end = long.Parse(s[1]);
                 return (start, end);
             })
             .OrderBy(r => r.start)
-            .Aggregate(new Stack<(long start, long end)>(), SimplifyRanges)
-            .Select(n =>
-            {
-                GD.PrintS(n.start, n.end);
-                
-                return n;
-            })
-            .Aggregate(0L, (n, r) => n + LongRange.From(r.start, r.end).Length());
-        
-        GD.Print(numFresh);
-    }
+            .ToList();
 
-    private Stack<(long start, long end)> SimplifyRanges(Stack<(long start, long end)> ranges, (long start, long end) current)
-    {
-        if (ranges.TryPop(out var last))
+        var merged = new List<(long start, long end)>();
+
+        foreach (var current in ranges)
         {
-            if (current.start <= last.end)
+            if (merged.Count == 0)
             {
-                ranges.Push((last.start, current.end));
+                merged.Add(current);
             }
             else
             {
-                ranges.Push(last);
-                ranges.Push(current);
+                var last = merged[^1];
+
+                if (current.start <= last.end + 1)
+                {
+                    merged[^1] = (last.start, Math.Max(last.end, current.end));
+                } else
+                {
+                    merged.Add(current);
+                }
             }
         }
-        else
-        {
-            ranges.Push(current);
-        }
-    
-        return new Stack<(long, long)>(ranges.OrderBy(s => s.start));
+
+        var numFresh = merged.Sum(r => r.end - r.start + 1);
+        
+        GD.Print(numFresh);
     }
+    
 }

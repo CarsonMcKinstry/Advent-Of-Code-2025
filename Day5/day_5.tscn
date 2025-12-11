@@ -4,4 +4,4 @@
 
 [node name="Day5" type="Node"]
 script = ExtResource("1_sttcl")
-Input = "res://Day5/example.txt"
+Input = "res://Day5/input.txt"
