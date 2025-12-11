@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx42sci25xg41"]
+
+[ext_resource type="Script" uid="uid://g7oau6x6m440" path="res://Day6/Day6.cs" id="1_iq7sp"]
+
+[node name="Day6" type="Node"]
+script = ExtResource("1_iq7sp")
+Input = "res://Day6/input.txt"
+metadata/_custom_type_script = "uid://ctsltjg4h0kos"
